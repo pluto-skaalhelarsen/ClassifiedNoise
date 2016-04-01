@@ -1,0 +1,71 @@
+The following notes are excerpts from the paper
+
+"A Mathematical Formalization of Hierarchical
+Temporal Memory Cortical Learning Algorithm’s
+Spatial Pooler"
+
+By James Mnatzaganian, Ernest Fokou ́e, and Dhireesha Kudithipudi
+
+all of the Rochester Institute of Technology
+
+.......................................................
+TABLE I: User-defined parameters for the SP
+Parameter Description
+n	Number of patterns (samples)
+p	Number of inputs (features) in a pattern
+m	Number of columns
+q	Number of proximal synapses per column
+φ +	Permanence increment amount
+φ −	Permanence decrement amount
+φ δ	Window of permanence initialization
+ρ d	Proximal dendrite segment activation threshold
+ρ s	Proximal synapse activation threshold
+ρ c	Desired column activity level
+κ a	Minimum activity level scaling factor
+κ b	Permanence boosting scaling factor
+β 0	Maximum boost
+τ	Duty cycle period
+
+............
+
+17 The following parameters were used to obtain these results: m = 936,
+q = 353, ρ d = 14, φ δ = 0.0105, ρ c = 182, φ + = 0.0355, φ − = 0.0024,
+β 0 = 18, and τ = 164.
+
+18 The following parameters were kept constant: ρ = 0.5, 30 training
+s
+epochs, and synapses were trimmed if their permanence value ever reached
+or fell below pow(10, -4) .
+
+19 The following parameters were used to obtain these results: m = 861,
+q = 425, ρ d = 32, φ δ = 0.0929, ρ c = 147, φ + = 0.0078, φ − = 0.0576,
+β 0 = 11, and τ = 35.
+
+.......................................................
+
+Table I describes the SP parameters as named in the paper, and the numbered entries below them are footnotes 17, 18, and 19 from page 9 of the paper, describing the parameters used for processing images from the famous NIST handwritten digit database. The RIT researchers have their own implementation of of the HTM SP with a hardware realization as its goal, and their parameterization follows closely that of the Numenta NuPIC code except for the RIT parameter q, the number of proximal synapses per column.
+
+NuPIC defines the potentialRadius param from which can be derived the number of inputs available to the proximal dendrite of a column, and the potentialPct param giving the fraction of the potential inputs that are actually connected. From these values the eqivalent of RIT's q parameter can be derived from the formula:
+
+From the NuPIC code comments:
+At initialization time we choose 
+	((2*potentialRadius + 1)^(# inputDimensions) * potentialPct)
+input bits to comprise the column's potential pool.
+
+The example code uses a one-dimensional input. The potentialPct default of 0.5 is mentioned several times in the Numenta documentation. 
+
+potentialRadius = q/(2*potentialPct) - 0.5
+
+Numerically:
+
+potentialRadius = 353/1 - 0.5 = 352.5
+
+So, q is essentially the potentialRadius out of the 784 input bits of the MNIST data.
+
+For a 2-dimensional input:
+
+q = (2*potentialRadius + 1)^2 * potentialPct
+
+
+
+
